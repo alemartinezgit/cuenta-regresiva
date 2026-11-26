@@ -11,6 +11,8 @@ Portada estática para GitHub Pages. HTML, CSS y JavaScript nativo, sin instalac
 
 Para una vista previa local, servir esta carpeta por HTTP con el servidor estático de tu preferencia (por ejemplo, Live Server en VS Code). Abrir el HTML con `file://` no permite cargar los módulos ni la cartografía en todos los navegadores.
 
+GitHub Pages puede conservar archivos en caché durante 10 minutos. Al modificar `app.js` o `styles.css`, actualizar el parámetro `v` de su referencia en `index.html` y publicar ambos archivos juntos para evitar mezclar versiones.
+
 ## Fechas y funcionamiento
 
 - Año del viaje: **2026**. Las fechas incluyen sus desfases UTC para que funcionen desde cualquier país.
@@ -21,7 +23,7 @@ Para una vista previa local, servir esta carpeta por HTTP con el servidor estát
 - El horario de París corresponde a la salida indicada. Se cambia de parada en ese momento; no se conoce la llegada.
 - Editar el itinerario y las coordenadas en `journey.js`. Los códigos de las tarjetas identifican ciudades o países; no todos son códigos aeroportuarios.
 - El mapa **no es GPS ni consulta el estado de vuelos**. La trayectoria MAD–EZE se interpola sobre un arco de círculo máximo entre el despegue y la llegada previstos. No representa rutas aéreas reales, retrasos ni desvíos.
-- “Simular el vuelo de regreso” permite previsualizar y recorrer ese arco. “Volver al presente” sale de la simulación. El reloj de Argentina siempre muestra la hora real.
+- “Simular vuelo de regreso” permite previsualizar y recorrer ese arco. “Volver al presente” sale de la simulación. Los relojes de Madrid y Buenos Aires siempre muestran la hora real en sus respectivos husos horarios, incluso durante la simulación.
 - Tras la llegada prevista, el contador queda en cero y el estado indica casa. No se verifica un aterrizaje real.
 - La hora depende del reloj del dispositivo del visitante.
 
