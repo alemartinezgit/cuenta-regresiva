@@ -6,6 +6,12 @@ let selectedStop = null;
 let previousState = "";
 let toastTimeout;
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+const madridClock = new Intl.DateTimeFormat("es-ES", {
+  timeZone: "Europe/Madrid", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+});
+const buenosAiresClock = new Intl.DateTimeFormat("es-AR", {
+  timeZone: "America/Argentina/Buenos_Aires", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+});
 
 stops.forEach((stop, index) => {
   const button = document.createElement("button");
@@ -16,20 +22,20 @@ stops.forEach((stop, index) => {
 });
 
 function update() {
-  const now = simulatedTime ?? Date.now();
+  const wallClock = new Date();
+  const now = simulatedTime ?? wallClock.getTime();
   const state = getJourneyState(now);
   const remaining = countdown(now);
   for (const [unit, value] of Object.entries(remaining)) $(unit).textContent = String(value).padStart(2, "0");
   document.querySelector(".countdown").setAttribute("aria-label", `${remaining.days} días, ${remaining.hours} horas, ${remaining.minutes} minutos y ${remaining.seconds} segundos para llegar a Buenos Aires`);
-  $("home-clock").textContent = new Intl.DateTimeFormat("es-AR", { timeZone: "America/Argentina/Buenos_Aires", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" }).format(Date.now());
-  $("home-clock").dateTime = new Date().toISOString();
+  $("europe-clock").textContent = madridClock.format(wallClock);
+  $("argentina-clock").textContent = buenosAiresClock.format(wallClock);
+  $("europe-clock").dateTime = wallClock.toISOString();
+  $("argentina-clock").dateTime = wallClock.toISOString();
   $("current-location").textContent = state.title;
-  $("location-detail").textContent = state.detail;
   $("location-label").textContent = simulatedTime !== null ? "VISTA PREVIA · UBICACIÓN SIMULADA" : state.phase === "flying" ? "POSICIÓN ESTIMADA · NO ES GPS" : "AHORA, SEGÚN EL ITINERARIO";
-  $("countdown-label").textContent = state.phase === "arrived" ? "LA ESPERA TERMINÓ · YA EN CASA" : "EL REENCUENTRO EMPIEZA EN";
-  $("flight-status").textContent = state.phase === "arrived" ? "LLEGADA PREVISTA COMPLETADA" : state.phase === "flying" ? "EN VUELO · SEGÚN EL HORARIO" : state.phase === "airport" ? "ES HORA DE EMBARCAR" : "RUMBO A ESE ABRAZO";
-  const { lat, lon } = state.position;
-  $("coordinates").textContent = `${Math.abs(lat).toFixed(2)}° ${lat >= 0 ? "N" : "S"}   ${Math.abs(lon).toFixed(2)}° ${lon >= 0 ? "E" : "O"}`;
+  $("countdown-label").textContent = state.phase === "arrived" ? "YA EN BUENOS AIRES" : "LLEGADA EN";
+  $("flight-status").textContent = state.phase === "arrived" ? "LLEGADA PREVISTA COMPLETADA" : state.phase === "flying" ? "EN VUELO · SEGÚN EL HORARIO" : state.phase === "airport" ? "ES HORA DE EMBARCAR" : "VUELO PROGRAMADO";
   const stateKey = `${state.index}-${state.phase}-${selectedStop}`;
   if (stateKey !== previousState) {
     previousState = stateKey;
@@ -40,9 +46,9 @@ function update() {
       button.setAttribute("aria-pressed", String(index === selected));
       if (index === state.index) button.setAttribute("aria-current", "step");
       else button.removeAttribute("aria-current");
-      const label = index === state.index ? state.phase === "flying" ? "EN VUELO A EZE" : state.phase === "arrived" ? "EN CASA" : "ESTOY ACÁ" : index < state.index ? "YA ESTUVE" : index === 7 ? "CASA ♡" : "PRÓXIMAMENTE";
+      const label = index === state.index ? state.phase === "flying" ? "EN VUELO A EZE" : state.phase === "arrived" ? "EN BUENOS AIRES" : "ESTOY ACÁ" : index < state.index ? "YA ESTUVE" : index === 7 ? "DESTINO" : "PRÓXIMAMENTE";
       button.querySelector(".stop-state").textContent = label;
-      button.querySelector(".stop-marker").textContent = index === state.index ? "●" : index < state.index ? "✓" : index === 7 ? "♡" : "↗";
+      button.querySelector(".stop-marker").textContent = index === state.index ? "●" : index < state.index ? "✓" : index === 7 ? "●" : "↗";
       button.setAttribute("aria-label", `${stops[index].city}, ${stops[index].date}. ${label}. Ver detalles`);
     });
     $("route-detail").replaceChildren();
@@ -62,7 +68,7 @@ function showToast(message) {
 
 $("share-button").addEventListener("click", async () => {
   try {
-    if (navigator.share) await navigator.share({ title: "Vuelta · Próxima parada: casa", text: "Cada vez falta menos para ese abrazo. Seguí mi camino a casa.", url: location.href });
+    if (navigator.share) await navigator.share({ title: "Vuelta a Buenos Aires", text: "Seguí el itinerario y la cuenta regresiva hasta Buenos Aires.", url: location.href });
     else { await navigator.clipboard.writeText(location.href); showToast("Enlace copiado. ¡Compartí la cuenta regresiva!"); }
   } catch (error) {
     if (error.name !== "AbortError") {
@@ -91,7 +97,7 @@ $("exit-demo").addEventListener("click", () => {
   selectedStop = null;
   $("demo-banner").hidden = true;
   $("simulation-controls").hidden = true;
-  $("preview-flight").innerHTML = 'Simular el vuelo de regreso <svg class="icon"><use href="#i-arrow"/></svg>';
+  $("preview-flight").innerHTML = 'Simular vuelo de regreso <svg class="icon"><use href="#i-arrow"/></svg>';
   update();
 });
 
