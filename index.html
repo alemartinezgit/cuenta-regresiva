@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#080e13">
+    <meta name="description" content="Un viaje por el mundo. Una cuenta regresiva para volver a casa. Seguí el recorrido de Ale hasta Buenos Aires.">
+    <title>Vuelta · Próxima parada: casa</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23080e13'/%3E%3Cpath d='M15 18l17 30 17-30M23 18l9 16 9-16' fill='none' stroke='%23d2fa86' stroke-width='5'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="./styles.css">
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+      <symbol id="i-plane" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4 20-7ZM11 13l6-6"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2"/></symbol>
+      <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M5 14v6h14v-6"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20 5c-3-3-7-1-8 1C8 0 0 5 4 11l8 9 8-9c2-2 2-4 0-6Z"/></symbol>
+    </svg>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="#" aria-label="Vuelta, inicio"><span class="brand-mark">∨</span> vuelta<span class="brand-dot">.</span></a>
+        <nav aria-label="Navegación principal">
+          <a class="nav-link active" href="#inicio">El viaje</a>
+          <a class="nav-link" href="#vuelo">Mi vuelo <svg class="icon"><use href="#i-arrow"/></svg></a>
+        </nav>
+        <div class="header-right"><span class="live-label"><span class="status-dot"></span> UNA AVENTURA EN CURSO</span><button class="icon-button" id="share-button" aria-label="Compartir este viaje"><svg class="icon"><use href="#i-share"/></svg></button></div>
+      </header>
+
+      <main>
+        <div id="demo-banner" class="demo-banner" hidden>
+          <span>SIMULACIÓN · Estás viendo una vista previa del vuelo, no la hora actual.</span><button id="exit-demo">Volver al presente ×</button>
+          <div class="simulation-controls" id="simulation-controls" hidden><label for="flight-progress">Explorá el vuelo <output id="flight-progress-label">50 %</output></label><input id="flight-progress" type="range" min="0" max="100" value="50"><span>Vista previa de la trayectoria estimada, no del vuelo real.</span></div>
+        </div>
+        <section class="hero" id="inicio" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <div class="eyebrow"><span class="tiny-line"></span> EL MEJOR DESTINO ES VOLVER</div>
+            <h1 id="hero-title">Tantos lugares.<br>Un solo <span>hogar.</span><span class="title-spark">✳</span></h1>
+            <p class="hero-description">Unas cuantas ciudades, miles de kilómetros<br class="desktop-break"> y cada vez menos para ese abrazo.</p>
+            <div class="countdown-heading"><span id="countdown-label">EL REENCUENTRO EMPIEZA EN</span><svg class="icon"><use href="#i-arrow"/></svg><span class="countdown-target">BUENOS AIRES</span></div>
+            <div class="countdown" role="timer" aria-label="Tiempo restante para llegar a Buenos Aires">
+              <div><span id="days">--</span><span class="time-unit">DÍAS</span></div><b>:</b>
+              <div><span id="hours">--</span><span class="time-unit">HORAS</span></div><b>:</b>
+              <div><span id="minutes">--</span><span class="time-unit">MINUTOS</span></div><b>:</b>
+              <div><span id="seconds">--</span><span class="time-unit">SEGUNDOS</span></div>
+            </div>
+            <div class="arrival-note"><span class="status-dot"></span> 17 DIC 2026 <span class="note-divider">/</span> 04:10 AM <span class="note-divider">/</span> EZEIZA, ARGENTINA</div>
+            <div class="hero-actions"><a class="primary-button" href="#recorrido">Explorar el recorrido <svg class="icon"><use href="#i-arrow"/></svg></a><span class="little-note">Nos vemos pronto <svg class="icon"><use href="#i-heart"/></svg></span></div>
+          </div>
+
+          <div class="globe-scene">
+            <div class="map-topline"><span><span class="status-dot"></span> TRAVEL TRACKER</span><span>2026 / EUROPA → CASA</span></div>
+            <div class="orbital-ring ring-one"></div><div class="orbital-ring ring-two"></div>
+            <canvas id="globe" aria-label="Globo animado con el itinerario entre Europa y Buenos Aires. Seguimiento estimado, no GPS." role="img"></canvas>
+            <div class="globe-caption">UN MUNDO POR RECORRER. UN LUGAR AL QUE VOLVER.</div>
+            <div class="location-card">
+              <div class="location-icon"><svg class="icon"><use href="#i-pin"/></svg></div>
+              <div><span class="micro-label" id="location-label">AHORA, SEGÚN EL ITINERARIO</span><strong id="current-location">Madrid, España</strong><span id="location-detail">Donde empieza esta última aventura.</span></div>
+              <span class="status-dot"></span>
+            </div>
+            <div class="map-bottomline"><span id="coordinates">40.42° N &nbsp; 3.70° O</span><span><span class="map-key"></span> RUTA PROGRAMADA</span></div>
+            <p id="map-error" class="map-error" role="status" hidden></p>
+          </div>
+        </section>
+
+        <section class="journey-section" id="recorrido" aria-labelledby="journey-title">
+          <div class="section-heading">
+            <div><div class="eyebrow muted">CADA PARADA, UNA HISTORIA</div><h2 id="journey-title">El camino a casa<span>.</span></h2></div>
+            <div class="journey-meta"><span>8 PARADAS</span><span class="meta-separator">/</span><span>1 REENCUENTRO</span><svg class="icon"><use href="#i-plane"/></svg></div>
+          </div>
+          <div class="timeline" id="timeline" aria-label="Paradas del viaje"></div>
+          <div class="route-detail" id="route-detail" aria-live="polite"></div>
+          <div class="timeline-footnote"><span><span class="status-dot"></span> El recorrido se actualiza solo con el paso del tiempo.</span><span>Ubicaciones estimadas · No es GPS en vivo</span></div>
+        </section>
+
+        <section class="flight-section" id="vuelo" aria-labelledby="flight-title">
+          <div class="flight-intro"><div class="eyebrow muted">EL ÚLTIMO GRAN SALTO</div><h2 id="flight-title">Próxima parada:<br><span>los de siempre.</span></h2><p>Después de tanta aventura, el mejor plan<br>es volver a verlos.</p><button class="text-button" id="preview-flight">Simular el vuelo de regreso <svg class="icon"><use href="#i-arrow"/></svg></button></div>
+          <div class="boarding-pass">
+            <div class="boarding-header"><span><svg class="icon"><use href="#i-plane"/></svg> AEROLÍNEAS ARGENTINAS</span><span class="flight-number">AR 1133</span></div>
+            <div class="flight-route">
+              <div><span class="micro-label">MIÉ, 16 DIC</span><strong>MAD</strong><span>Madrid</span><b>19:05 <small>CET</small></b></div>
+              <div class="flight-connection"><span>13 H 05 MIN</span><div class="flight-line"><svg class="icon"><use href="#i-plane"/></svg></div><span>DIRECTO · A330</span></div>
+              <div class="flight-destination"><span class="micro-label">JUE, 17 DIC</span><strong>EZE</strong><span>Buenos Aires</span><b>04:10 <small>ART</small></b></div>
+            </div>
+            <div class="flight-footer"><span><span class="status-dot"></span><span id="flight-status">RUMBO A ESE ABRAZO</span></span><span>EN BARAJAS · 16:00 CET</span></div>
+          </div>
+        </section>
+      </main>
+      <footer class="site-footer"><a class="brand footer-brand" href="#">vuelta<span class="brand-dot">.</span></a><span>Hecho de kilómetros, historias y ganas de volver.</span><span class="home-clock"><span class="status-dot"></span> EN CASA SON LAS <time id="home-clock">--:--:--</time> <span>ART</span></span></footer>
+    </div>
+    <div id="toast" class="toast" role="status" hidden></div>
+    <noscript><div class="noscript-note">Activá JavaScript para ver el contador y el mapa. La llegada está prevista para el 17 de diciembre de 2026 a las 04:10, hora argentina.</div></noscript>
+  </body>
+</html>
